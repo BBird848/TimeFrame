@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Subjects</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 700px;
+            margin: 60px auto;
+            background-color: #d6d9de;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .subjects {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .subject {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .subject:hover {
+            filter: brightness(1.15);
+        }
+
+        .subject:nth-child(1) { background-color: #c0392b; }
+        .subject:nth-child(2) { background-color: #8e5a2a; }
+        .subject:nth-child(3) { background-color: #566573; }
+        .subject:nth-child(4) { background-color: #238b45; }
+        .subject:nth-child(5) { background-color: #c04b78; }
+        .subject:nth-child(6) { background-color: #b8860b; }
+        .subject:nth-child(7) { background-color: #286090; }
+        .subject:nth-child(8) { background-color: #d35400; }
+
+        .subject input {
+            margin-right: 10px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .grade-selection {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .grade-selection label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .grade-selection select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #subject-limit-message {
+            color: #b00020;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>SELECT YOUR SUBJECTS</h1>
+
+        <p>Select 5 subjects you would like to include in your timetable.</p>
+
+        <form action="/generate" method="POST">
+
+            <div class="subjects">
+
+                <label class="subject">
+                    <input style="background-color: red; color: black;" type="checkbox" name="subjects" value="Maths"><b>Maths</b>
+                    
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: brown; color: black;" type="checkbox" name="subjects" value="Physics"><b>Physics</b>
+                    
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: gray; color: black;" type="checkbox" name="subjects" value="Chemistry"><b>Chemistry</b>
+                    
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: green; color: black;" type="checkbox" name="subjects" value="Biology"><b>Biology</b>
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: pink; color: black;" type="checkbox" name="subjects" value="History"><b>History</b>
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: yellow; color: black;" type="checkbox" name="subjects" value="Business Management"><b>Business</b>
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: blue; color: black;" type="checkbox" name="subjects" value="English"><b>English</b>
+                </label>
+
+                <label class="subject">
+                    <input style="background-color: orange; color: black;" type="checkbox" name="subjects" value="French"><b>French</b>
+                </label>
+
+            </div>
+
+            <p id="subject-limit-message" aria-live="polite"></p>
+
+            <div class="grade-selection">
+                <label for="grade">Select your grade</label>
+                <select id="grade" name="grade" required>
+                    <option value="" selected disabled>Choose a grade</option>
+                    {% for grade in range(7, 13) %}
+                        <option value="{{ grade }}">Grade {{ grade }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="button-container">
+                <button style="background-color: purple; color: black; border: none; padding: 12px 30px; font-size: 16px; border-radius: 8px;" type="submit"><b>Done</b></button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+        const subjectCheckboxes = document.querySelectorAll('input[name="subjects"]');
+        const limitMessage = document.getElementById('subject-limit-message');
+
+        subjectCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                const selectedSubjects = document.querySelectorAll('input[name="subjects"]:checked');
+                const limitReached = selectedSubjects.length >= 5;
+
+                subjectCheckboxes.forEach((subjectCheckbox) => {
+                    subjectCheckbox.disabled = limitReached && !subjectCheckbox.checked;
+                });
+
+                limitMessage.textContent = limitReached
+                    ? 'Only 5 subjects can be selected'
+                    : '';
+            });
+        });
+    </script>
+
+</body>
+</html>
